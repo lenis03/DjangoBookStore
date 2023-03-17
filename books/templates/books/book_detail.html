@@ -4,10 +4,10 @@
     جزئیات کتاب  {{ book.title }}
 {% endblock %}
 {% block content %}
-       <h1>{{ bool.title }}</h1>
+    <h1>{{ book.title }}</h1>
     <p>{{ book.description }}</p>
-    <p> نویسنده:  {{ book.author }}</p>
-<h4>  قیمت: {{ book.price }}</h4>
+    <p> نویسنده: {{ book.author }}</p>
+    <h4> قیمت:{{ book.price }}</h4>
     <br>
     <a href="{% url 'book_list' %}">لیست همه کتاب ها</a>
 {% endblock %}
