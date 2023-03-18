@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+
+
+{% block page_title %}
+    حذف کتاب
+{% endblock page_title %}
+
+{% block content %}
+    <div class="container">
+        <div class="card shadow  my-3 p-5">
+            <h1>آیا واقعا مطمئنی؟</h1>
+            <p>آیا مطمئنی که میخوای  کتاب ({{ book.title }})رو به صورت دائم حذف کنی؟ </p>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input class="btn btn-danger" type="submit" value="!آره،مطمئنم">
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
