@@ -1,5 +1,5 @@
 {% extends '_base.html' %}
-
+{% load static %}
 {% block page_title %}
     جزئیات کتاب  {{ book.title }}
 {% endblock %}
@@ -11,8 +11,13 @@
                     <div class="row w-sm-75 w-100">
                         <div class="col-xs-12 col-md-3 d-flex justify-content-center">
                             <div>
-                                <img src="https://newcdn.fidibo.com/images/books/65579_50411_normal.jpg"
-                                     class="img-fluid rounded-start" alt="...">
+                                {% if book.cover %}
+                                    <img class="shadow" src="{{ book.cover.url }}" class="img-fluid rounded-start"
+                                         alt="...">
+                                {% else %}
+                                    <img class="shadow" src="{% static 'icons/book.png' %}"
+                                         class="img-fluid rounded-start" alt="...">
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6 text-center text-md-end mt-md-1 mt-4">
@@ -20,6 +25,10 @@
                             <h5 class="small my-1"><span class="text-muted">نویسنده: </span>{{ book.author }}</h5>
                             <h5 class="small my-1"><span class="text-muted">مترجم: </span>الهام خرسندی</h5>
                             <h5 class="small my-1"><span class="text-muted">انتشارات: </span>هوزمزد</h5>
+                            <a href="{% url 'book_update' book.id %}"><button class="btn btn-info" type="button">ویرایش</button></a>
+                            <a href="{% url 'book_delete' book.id %}"><button class="btn btn-danger" type="button">حذف</button></a>
+
+
                         </div>
                         <div class="col-xs-12 col-md-3 d-flex flex-column">
                             <h3 class="align-self-center pt-2 text-muted align-self-md-end">
@@ -32,13 +41,6 @@
                 <div class="d-flex justify-content-center">
                     <div class="my-3 p-5 w-sm-75 w-100">
                         {{ book.description|linebreaks }}
-                        <br>
-                        <a href="{% url 'book_update' book.id %}">
-                            <button class="btn btn-info" type="button">ویرایش</button>
-                        </a>
-                        <a href="{% url 'book_delete' book.id %}">
-                            <button class="btn btn-danger" type="button">حذف</button>
-                        </a>
                     </div>
                 </div>
 
