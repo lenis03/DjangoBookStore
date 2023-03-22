@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load crispy_forms_filters %}
 {% block page_title %}
     جزئیات کتاب  {{ book.title }}
 {% endblock %}
@@ -25,8 +26,12 @@
                             <h5 class="small my-1"><span class="text-muted">نویسنده: </span>{{ book.author }}</h5>
                             <h5 class="small my-1"><span class="text-muted">مترجم: </span>{{ book.translator }}</h5>
                             <h5 class="small my-1"><span class="text-muted">انتشارات: </span>{{ book.publishers }}</h5>
-                            <a href="{% url 'book_update' book.id %}"><button class="btn btn-info" type="button">ویرایش</button></a>
-                            <a href="{% url 'book_delete' book.id %}"><button class="btn btn-danger" type="button">حذف</button></a>
+                            <a href="{% url 'book_update' book.id %}">
+                                <button class="btn btn-info" type="button">ویرایش</button>
+                            </a>
+                            <a href="{% url 'book_delete' book.id %}">
+                                <button class="btn btn-danger" type="button">حذف</button>
+                            </a>
 
 
                         </div>
@@ -48,11 +53,19 @@
                     <div class="card shadow my-3 p-5 w-sm-75 w-100">
                         <h2 class="mb-5">نظرات:</h2>
                         {% for comment in comments %}
-                        <div class="border-bottom mb-3">
-                            <h5 class="mb-3">{{ comment.user.username }} </h5>
-                            <p>{{ comment.text|linebreaks }}</p>
-                        </div>
-                    {% endfor %}
+                            {% if comment.is_active %}
+                                <div class="border-bottom mb-3">
+                                    <h5 class="mb-3">{{ comment.user.username }} </h5>
+                                    {% if comment.recommend %}
+                                        <h5>این کتاب را توصیه میکنم</h5>
+                                    {% else %}
+                                        <h5>این کتاب را توصیه نمیکنم</h5>
+                                    {% endif %}
+                                    <p>{{ comment.text|linebreaks }}</p>
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -60,20 +73,9 @@
                     <div class="card shadow my-3 p-5 w-sm-75 w-100">
                         <h3>نظر خود را وارد کنید:</h3>
                         <form method="POST">
-                            <div class="form-group py-2">
-                                <label class="py-1" for="author_name">نام شما:</label>
-                                <input type="text" class="form-control" placeholder="فردین ترکماند" name="author_name">
-                            </div>
-                            <div class="form-group py-2">
-                                <label class="py-1" for="email">ایمیل شما:</label>
-                                <input type="email" class="form-control" placeholder="example@gmail.com" name="email">
-                            </div>
-                            <div class="form-group py-2">
-                                <label class="py-1" for="comment_text">متن نظر:</label>
-                                <textarea class="form-control" name="text" rows="3"
-                                          placeholder="نظر خود را اینجا وارد کنید."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">ارسال</button>
+                            {% csrf_token %}
+                            {{ comment_form|crispy }}
+                            <button type="submit" class="btn btn-primary mt-3">ارسال</button>
                         </form>
                     </div>
                 </div>
