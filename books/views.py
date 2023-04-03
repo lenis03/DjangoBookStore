@@ -1,10 +1,10 @@
 from django.views import generic
 from django.urls import reverse_lazy
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 
-from .forms import CommentForm
+from .forms import CommentForm, BookCreateForm
 from .models import Book
 
 
@@ -40,15 +40,27 @@ def book_detail_view(request, pk):
     })
 
 
-class BookCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateView):
-    model = Book
-    fields = ['title', 'description', 'author', 'price', 'cover', 'publishers', 'translator']
-    template_name = 'books/book_create.html'
+# class BookCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateView):
+#     model = Book
+#     fields = ['title', 'description', 'author', 'price', 'cover', 'publishers', 'translator']
+#     template_name = 'books/book_create.html'
+#
+#     def test_func(self):
+#         obj = self.get_object()
+#         return obj.user == self.request.user
 
-    def test_func(self):
-        obj = self.get_object()
-        return obj.user == self.request.user
-
+@login_required
+def book_create_view(request):
+    if request.method == 'POST':
+        book_create_form = BookCreateForm(request.POST)
+        if book_create_form.is_valid():
+            new_book = book_create_form.save(commit=False)
+            new_book.user = request.user
+            new_book.save()
+            return redirect('book_list')
+    else:
+        book_create_form = BookCreateForm()
+    return render(request, 'books/book_create.html', context={'form': book_create_form})
 
 class BookUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
 
