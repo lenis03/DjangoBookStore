@@ -36,9 +36,12 @@
         </div>
         <div class="mx-2 text-white">
             {% if user.is_authenticated %}
-                خوش آمدی {{ user.username }}
-                <span>|</span>
-                <a class="link-light text-decoration-none" href="{% url 'logout' %}">خروج</a>
+                
+                
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    خوش آمدی {{ user.username }}<span>|</span> <button type="submit" class="btn btn-danger">خروج</button>
+                </form>
             {% else %}
                 <a class="link-light text-decoration-none" href="{% url 'login' %}">ورود</a>
                 <span>یا</span>

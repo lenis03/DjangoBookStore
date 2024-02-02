@@ -30,7 +30,6 @@ def book_detail_view(request, pk):
             new_comment.book = book
             new_comment.user = request.user
             new_comment.save()
-            comment_form = CommentForm()
     else:
         comment_form = CommentForm()
     return render(request, 'books/book_detail.html', {
@@ -61,6 +60,7 @@ def book_create_view(request):
     else:
         book_create_form = BookCreateForm()
     return render(request, 'books/book_create.html', context={'form': book_create_form})
+
 
 class BookUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
 
